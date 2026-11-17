@@ -84,6 +84,19 @@ h3 { font: 400 27px/1.1 var(--serif); letter-spacing: -.01em; color: var(--ivory
 .loop-bar { height: 1px; background: var(--line); margin: 12px 0 12px; position: relative; }
 .loop-bar i { position: absolute; left: 0; top: -1px; height: 3px; width: 0; background: var(--sage); }
 .scroll-cue { display: none; text-decoration: none; }
+@media (max-width: 700px) {
+  .hero { padding-top: 76px; padding-bottom: 44px; gap: 28px; }
+  .hero-copy { display: grid; grid-template-columns: 1fr auto; align-items: center;
+    grid-template-areas: "beta version" "title title" "summary summary" "action action"; }
+  .hero .eyebrow { grid-area: beta; margin: 0; }
+  .hero-context { display: none; }
+  .hero h1 { grid-area: title; margin-top: 12px; }
+  .hero .lede { grid-area: summary; margin-top: 14px; font-size: 16px; line-height: 1.45; }
+  .hero .actions { display: contents; }
+  .hero .btn-solid { grid-area: action; justify-self: start; margin-top: 18px; }
+  .hero .hero-release { grid-area: version; min-height: 40px; padding: 0 2px; gap: 4px; border: 0;
+    color: var(--sage); font-size: 11px; text-transform: none; text-decoration: underline; text-underline-offset: 4px; }
+}
 @media (min-width: 1000px) {
   .hero { grid-template-columns: minmax(0, 5fr) minmax(0, 6.4fr); column-gap: 5vw; padding-top: 17vh; padding-bottom: 9vh; align-content: stretch; }
   .hero-copy { align-self: start; }
@@ -172,6 +185,7 @@ h3 { font: 400 27px/1.1 var(--serif); letter-spacing: -.01em; color: var(--ivory
 /* ------------------------------------------------------------ evidence */
 .evidence { padding: 110px var(--gr) 120px var(--gl); max-width: calc(var(--wrap) + 88px); margin: 0 auto; display: grid; gap: 54px; }
 .evidence-plate { max-width: 760px; width: 100%; }
+.evidence-replay { margin-top: 18px; }
 .plate-record { position: relative; margin-top: 22px; border-top: 1px solid var(--line); padding-top: 22px; }
 #ev-diagram { width: 100%; height: auto; aspect-ratio: 16 / 9; background: var(--ink2); }
 .fields { display: grid; grid-template-columns: 1fr 1fr; gap: 0 26px; margin-top: 6px; }
@@ -246,6 +260,7 @@ h3 { font: 400 27px/1.1 var(--serif); letter-spacing: -.01em; color: var(--ivory
 .film-static li { display: grid; gap: 22px; }
 .film-static img { width: 100%; height: auto; border: 1px solid var(--line); }
 .film-static .cap { position: static; opacity: 1; transform: none; pointer-events: auto; max-width: 560px; }
+.film-static .cap-record { display: block; }
 .film-static-h { padding: 0 var(--gr) 34px var(--gl); max-width: calc(var(--wrap) + 88px); margin: 0 auto; }
 @media (min-width: 900px) { .film-static li { grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); column-gap: 5vw; align-items: end; } }
 .film[data-static="1"] .film-track { display: none; }
@@ -275,6 +290,14 @@ h3 { font: 400 27px/1.1 var(--serif); letter-spacing: -.01em; color: var(--ivory
   .fl-frame-b { display: none; }
   .film-overlay .fl-tag { top: auto; bottom: 30px; left: auto; right: var(--gr); max-width: calc(100% - 2 * var(--gr)); white-space: normal; text-align: right; font-size: 10px; line-height: 1.4; background: rgba(8, 13, 13, .8); }
   .note-wide { display: none; }
+  /* Give the last chapter its natural height. On a short screen the page can
+     scroll through all the fields and then the chapter controls. */
+  .film-stage[data-beat="6"] { height: auto; min-height: 100svh; overflow: visible;
+    grid-template-rows: minmax(clamp(180px, 37svh, 420px), 1fr) auto; }
+  .film-stage[data-beat="6"] .film-caps { height: auto; overflow: visible; }
+  .film-stage[data-beat="6"] .film-view { overflow: hidden; }
+  .film-stage[data-beat="6"] .cap.on { position: relative; }
+  .film-stage[data-beat="6"] .film-ctl { position: static; }
 }
 
 /* ------------------------------------------------------------ 04 the project */

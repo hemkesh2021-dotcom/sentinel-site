@@ -1,0 +1,32 @@
+.track-replay {
+  color-scheme: dark; color: #eff4ee; background: #101817; border: 1px solid #586a60;
+  box-sizing: border-box; width: min(600px, calc(100% - 24px)); max-width: none;
+  max-height: calc(100% - 24px); max-height: calc(100dvh - 24px); padding: clamp(14px, 3vw, 26px);
+  margin: auto; overflow: auto; overscroll-behavior: contain; border-radius: 7px;
+  font: 400 15px/1.4 "IBM Plex Sans", system-ui, sans-serif;
+}
+.track-replay::backdrop { background: rgb(3 9 8 / 86%); }
+.track-replay .tr-head, .track-replay .tr-readout, .track-replay .tr-controls {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.track-replay .tr-label, .track-replay .tr-sample, .track-replay dt, .track-replay .tr-controls span {
+  margin: 0; font: 500 11px/1.5 "IBM Plex Mono", ui-monospace, monospace; color: #b2c2b9;
+}
+.track-replay .tr-label, .track-replay .tr-sample { text-transform: uppercase; letter-spacing: .09em; }
+.track-replay h2 { margin: 1px 0 0; color: #eff4ee; font: 400 clamp(32px, 7vw, 47px)/1.06 "Instrument Serif", Georgia, serif; }
+.track-replay button {
+  cursor: pointer; padding: 0 14px; min-height: 40px; color: #eff4ee; background: transparent;
+  border: 1px solid #63786c; border-radius: 22px; font: 500 13px/1.2 "IBM Plex Sans", system-ui, sans-serif;
+}
+.track-replay button:focus-visible { outline: 2px solid #c5ffe1; outline-offset: 2px; }
+.track-replay .tr-frame { position: relative; margin: 14px 0; border: 1px solid #34453b; background: #080d0d; }
+.track-replay canvas { display: block; width: 100%; height: auto; }
+.track-replay .tr-sample { position: absolute; top: 8px; left: 8px; padding: 2px 5px; background: #0d1613; color: #d4e2d9; font-size: 10px; }
+.track-replay .tr-readout { align-items: baseline; font-weight: 500; }
+.track-replay [data-dwell] { flex: none; color: #b4eed0; font: 500 13px/1.4 "IBM Plex Mono", ui-monospace, monospace; }
+.track-replay .tr-timeline { height: 2px; background: #3a4a40; margin: 10px 0 15px; }
+.track-replay .tr-timeline i { display: block; height: 100%; background: #b4eed0; transform-origin: left; }
+.track-replay .tr-receipt { margin: 0 0 14px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+.track-replay [data-source] { font-variant-numeric: tabular-nums; }
+.track-replay dd { margin: 1px 0 0; color: #eff4ee; font-size: 15px; }
+.track-replay [data-play] { color: #102018; background: #b4eed0; border-color: #b4eed0; }

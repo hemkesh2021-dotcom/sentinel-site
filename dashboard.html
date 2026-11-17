@@ -1438,6 +1438,40 @@ html.demo-loading body { visibility: hidden; }
   };
 });
 </script>
+<style id="site-track-replay.css">
+.track-replay {
+  color-scheme: dark; color: #eff4ee; background: #101817; border: 1px solid #586a60;
+  box-sizing: border-box; width: min(600px, calc(100% - 24px)); max-width: none;
+  max-height: calc(100% - 24px); max-height: calc(100dvh - 24px); padding: clamp(14px, 3vw, 26px);
+  margin: auto; overflow: auto; overscroll-behavior: contain; border-radius: 7px;
+  font: 400 15px/1.4 "IBM Plex Sans", system-ui, sans-serif;
+}
+.track-replay::backdrop { background: rgb(3 9 8 / 86%); }
+.track-replay .tr-head, .track-replay .tr-readout, .track-replay .tr-controls {
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.track-replay .tr-label, .track-replay .tr-sample, .track-replay dt, .track-replay .tr-controls span {
+  margin: 0; font: 500 11px/1.5 "IBM Plex Mono", ui-monospace, monospace; color: #b2c2b9;
+}
+.track-replay .tr-label, .track-replay .tr-sample { text-transform: uppercase; letter-spacing: .09em; }
+.track-replay h2 { margin: 1px 0 0; color: #eff4ee; font: 400 clamp(32px, 7vw, 47px)/1.06 "Instrument Serif", Georgia, serif; }
+.track-replay button {
+  cursor: pointer; padding: 0 14px; min-height: 40px; color: #eff4ee; background: transparent;
+  border: 1px solid #63786c; border-radius: 22px; font: 500 13px/1.2 "IBM Plex Sans", system-ui, sans-serif;
+}
+.track-replay button:focus-visible { outline: 2px solid #c5ffe1; outline-offset: 2px; }
+.track-replay .tr-frame { position: relative; margin: 14px 0; border: 1px solid #34453b; background: #080d0d; }
+.track-replay canvas { display: block; width: 100%; height: auto; }
+.track-replay .tr-sample { position: absolute; top: 8px; left: 8px; padding: 2px 5px; background: #0d1613; color: #d4e2d9; font-size: 10px; }
+.track-replay .tr-readout { align-items: baseline; font-weight: 500; }
+.track-replay [data-dwell] { flex: none; color: #b4eed0; font: 500 13px/1.4 "IBM Plex Mono", ui-monospace, monospace; }
+.track-replay .tr-timeline { height: 2px; background: #3a4a40; margin: 10px 0 15px; }
+.track-replay .tr-timeline i { display: block; height: 100%; background: #b4eed0; transform-origin: left; }
+.track-replay .tr-receipt { margin: 0 0 14px; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+.track-replay [data-source] { font-variant-numeric: tabular-nums; }
+.track-replay dd { margin: 1px 0 0; color: #eff4ee; font-size: 15px; }
+.track-replay [data-play] { color: #102018; background: #b4eed0; border-color: #b4eed0; }
+</style>
 </head><body>
 <svg class="sprite" aria-hidden="true" focusable="false"><defs><symbol id="i-logo" viewBox="0 0 24 24"><path d="M16.2 7.3A4.4 3.7 0 1 0 12 12a4.4 3.7 0 1 1-4.2 4.7"/><circle cx="12" cy="12" r="10.1" stroke-width="1.15" opacity=".5"/></symbol><symbol id="i-video" viewBox="0 0 24 24"><rect x="2.5" y="6" width="13" height="12" rx="2.5"/><path d="M15.5 10.2 21.5 7v10l-6-3.2z"/></symbol><symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16.5V11a6 6 0 0 1 12 0v5.5l1.5 2h-15z"/><path d="M10 21a2.2 2.2 0 0 0 4 0"/></symbol><symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m7.8 12.4 2.8 2.8 5.6-5.8"/></symbol><symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.6 21.6 20H2.4z"/><path d="M12 9.6v4.6"/><circle class="solid" cx="12" cy="17.2" r="1.1"/></symbol><symbol id="i-crit" viewBox="0 0 24 24"><path d="M8.3 3h7.4L21 8.3v7.4L15.7 21H8.3L3 15.7V8.3z"/><path d="m9.2 9.2 5.6 5.6m0-5.6-5.6 5.6"/></symbol><symbol id="i-off" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M5.7 5.7 18.3 18.3"/></symbol><symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2V12l3.4 2.1"/></symbol><symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.8v11.4"/><path d="m7.2 10.6 4.8 4.8 4.8-4.8"/><path d="M4.5 19.8h15"/></symbol><symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5.5 6.5 6.5L9 18.5"/></symbol><symbol id="i-image" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5"/><circle cx="8.6" cy="9.8" r="1.7"/><path d="m3.8 17.8 5.4-5.2 3.7 3.4 2.6-2.4 4.7 4.4"/></symbol><symbol id="i-back" viewBox="0 0 24 24"><path d="M15 5.5 8.5 12l6.5 6.5"/></symbol><symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.8v2.2M12 19v2.2M2.8 12h2.2M19 12h2.2M5.5 5.5l1.6 1.6M16.9 16.9l1.6 1.6M5.5 18.5l1.6-1.6M16.9 7.1l1.6-1.6"/></symbol><symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.2 14.6A8.4 8.4 0 0 1 9.4 3.8a8.4 8.4 0 1 0 10.8 10.8z"/></symbol><symbol id="i-auto" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.6"/><path class="solid" d="M12 3.4a8.6 8.6 0 0 1 0 17.2z"/></symbol><symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 19.5 6v5.4c0 4.6-3.1 8.4-7.5 9.8-4.4-1.4-7.5-5.2-7.5-9.8V6z"/><path d="m8.6 12 2.4 2.4 4.4-4.6"/></symbol><symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5.4"/><circle class="solid" cx="12" cy="7.7" r="1.1"/></symbol><symbol id="i-send" viewBox="0 0 24 24"><path d="M3.5 11.2 20.5 4l-7.2 17-2.3-7.5z"/><path d="m11 13.5 9.5-9.5"/></symbol><symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5.5h16v10.5H9.5L5 20v-4H4z"/></symbol><symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6.5h12M8.5 12h12M8.5 17.5h12"/><circle class="solid" cx="4.4" cy="6.5" r="1.2"/><circle class="solid" cx="4.4" cy="12" r="1.2"/><circle class="solid" cx="4.4" cy="17.5" r="1.2"/></symbol><symbol id="i-scan" viewBox="0 0 24 24"><path d="M3.5 8V6.2a2.7 2.7 0 0 1 2.7-2.7H8M16 3.5h1.8a2.7 2.7 0 0 1 2.7 2.7V8M20.5 16v1.8a2.7 2.7 0 0 1-2.7 2.7H16M8 20.5H6.2a2.7 2.7 0 0 1-2.7-2.7V16"/><circle cx="12" cy="10" r="2.8"/><path d="M7.4 17.4a5 5 0 0 1 9.2 0"/></symbol><symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8.4" r="3.8"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol><symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.4a2.6 2.6 0 0 1 5 .9c0 1.8-2.5 2.2-2.5 3.9"/><circle class="solid" cx="12" cy="17.3" r="1.1"/></symbol><symbol id="i-flask" viewBox="0 0 24 24"><path d="M9.2 3.5h5.6M10.2 3.5v5.6L4.9 18.2a1.6 1.6 0 0 0 1.4 2.3h11.4a1.6 1.6 0 0 0 1.4-2.3L13.8 9.1V3.5"/><path d="M7.6 14.5h8.8"/></symbol><symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 7h9.5M17.5 7H20M4 17h3.5M11.5 17H20"/><circle cx="15.5" cy="7" r="2"/><circle cx="9.5" cy="17" r="2"/></symbol><symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></symbol><symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></symbol><symbol id="i-sidebar" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9.5 4v16"/></symbol><symbol id="i-expand" viewBox="0 0 24 24"><path d="M14.5 3.5h6v6M9.5 20.5h-6v-6M20.5 3.5l-7 7M3.5 20.5l7-7"/></symbol><symbol id="i-shrink" viewBox="0 0 24 24"><path d="M20.5 9.5h-6v-6M3.5 14.5h6v6M14.5 9.5l6-6M9.5 14.5l-6 6"/></symbol><symbol id="i-filter" viewBox="0 0 24 24"><path d="M4 5h16l-6.2 7.3v5.9l-3.6 1.8v-7.7z"/></symbol><symbol id="i-toggle" viewBox="0 0 24 24"><rect x="2.5" y="7" width="19" height="10" rx="5"/><circle class="solid" cx="16.5" cy="12" r="3"/></symbol><symbol id="i-fit" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M7.5 9.5v5h9v-5z"/></symbol><symbol id="i-actual" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="M8.5 9.5h1.4v5M14.1 9.5h1.4v5"/></symbol><symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.8 12s3.4-6.2 9.2-6.2 9.2 6.2 9.2 6.2-3.4 6.2-9.2 6.2S2.8 12 2.8 12z"/><circle cx="12" cy="12" r="2.6"/></symbol><linearGradient id="hl-metal" x1="0" y1="0" x2="1" y2="1"><stop offset="0" class="hl-a"/><stop offset=".55" class="hl-b"/><stop offset="1" class="hl-c"/></linearGradient></defs></svg>
 <a class=skip href="#live">Skip to the live view</a>
@@ -3039,6 +3073,10 @@ html.demo-loading body { visibility: hidden; }
     theme: setTheme, embed: setEmbedded,
     started() {  // after the dashboard's own script has run
       ready();
+      const replay = window.SentinelTrackReplay;
+      if (replay) replay.enhanceDashboard(document.getElementById("inc-preview"), (id) =>
+        incidentsNow().some(({incident, id: current}) => current === id && !incident.seed &&
+          incident.first_ms === Math.round(replay.recording.opened * 1000)));
       setInterval(() => { advance(); tell({type: "tick", ...worldNow()}); }, 1000);
       setInterval(advance, 200);  // the script's events are reported as the clock passes them
     },
@@ -5557,6 +5595,134 @@ html.demo-loading body { visibility: hidden; }
     if (wanted) select(wanted[1]);
   }
   schedule(EVERY);
+})();
+</script>
+<script id="site-track-replay.js">
+/* Site-only replay of the synthetic incident in dashboard.html. The recording's
+   opening observation spans source frames 212 through 227 at 15 fps. */
+(() => {
+  "use strict";
+  const yard = window.SentinelCourtyard;
+  const recording = Object.freeze({ track: 73, entered: 212 / 15, opened: 227 / 15 });
+  const start = yard.SCENARIOS.find((scene) => scene.id === "zone").t;
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const stills = () => reduced.matches || new URLSearchParams(location.search).get("calm") === "1";
+  const stamp = (t) => t.toFixed(2) + " s";
+  const dialog = document.createElement("dialog");
+  dialog.className = "track-replay";
+  dialog.setAttribute("aria-labelledby", "track-replay-title");
+  dialog.innerHTML = `
+    <div class="tr-head"><div><p class="tr-label">Camera 01 / Zone A</p><h2 id="track-replay-title">Track 73</h2></div>
+      <button type="button" data-close-replay aria-label="Close replay">Close</button></div>
+    <div class="tr-frame"><canvas width="960" height="540" role="img" aria-label="Illustrated courtyard. A ring at Track 73’s feet fills as the person stays inside Zone A."></canvas>
+      <span class="tr-sample">Synthetic replay</span></div>
+    <div class="tr-readout"><span data-phase role="status"></span><span data-dwell></span></div>
+    <div class="tr-timeline" aria-hidden="true"><i></i></div>
+    <dl class="tr-receipt">
+      <div><dt>Track</dt><dd>73 · Zone A</dd></div><div><dt>Source time</dt><dd data-source></dd></div>
+      <div><dt>Stored</dt><dd data-store></dd></div><div><dt>Snapshot</dt><dd data-snapshot></dd></div>
+    </dl>
+    <div class="tr-controls"><button type="button" data-play></button><span>1.0 s zone rule</span></div>`;
+  document.body.append(dialog);
+  const find = (selector) => dialog.querySelector(selector);
+  const canvas = find("canvas"), ctx = canvas.getContext("2d");
+  const phase = find("[data-phase]"), source = find("[data-source]"), dwellLabel = find("[data-dwell]");
+  const store = find("[data-store]"), snapshot = find("[data-snapshot]");
+  const play = find("[data-play]"), bar = find(".tr-timeline i");
+  let time = start, frame = 0, earlier = 0, trigger;
+
+  function draw() {
+    const state = yard.sample(time);
+    const who = state.actors.find((actor) => actor.track === recording.track);
+    const dwell = Math.max(0, Math.min(1, (time - recording.entered) / (recording.opened - recording.entered)));
+    const done = time >= recording.opened;
+    // One crop for both layers keeps the ring on the projected ground contact.
+    ctx.save();
+    ctx.scale(1.36, 1.36);
+    ctx.translate(-98, -65);
+    yard.render(ctx, state, { view: yard.CAMERA, annotations: false, zoneStrength: time < recording.entered ? 0.4 : 1 });
+    if (who) {
+      const x = who.foot[0] * yard.W, y = who.foot[1] * yard.H;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(1, 0.47);
+      ctx.lineWidth = 2.5;
+      ctx.strokeStyle = time < recording.entered ? "#9eb6aa" : "#6f9382";
+      ctx.beginPath(); ctx.arc(0, 0, 23, 0, Math.PI * 2); ctx.stroke();
+      if (dwell > 0) {
+        ctx.lineWidth = 6; ctx.strokeStyle = "#c5ffe1";
+        ctx.beginPath(); ctx.arc(0, 0, 23, -Math.PI / 2, -Math.PI / 2 + dwell * Math.PI * 2); ctx.stroke();
+      }
+      ctx.restore();
+    }
+    ctx.restore();
+    const message = done ? "Incident opened" : time >= recording.entered ? "Inside Zone A" : "Approaching Zone A";
+    if (phase.textContent !== message) {
+      phase.textContent = message;
+      store.textContent = done ? "Local SQLite" : "Awaiting rule";
+      snapshot.textContent = done ? "No snapshot saved" : "—";
+    }
+    source.textContent = stamp(time);
+    dwellLabel.textContent = dwell.toFixed(2) + " / 1.00 s";
+    bar.style.transform = "scaleX(" + ((time - start) / (recording.opened - start)) + ")";
+    play.textContent = done ? "Replay Track 73" : frame ? "Pause replay" : stills() ? "Next moment" : "Play replay";
+  }
+  function pause() { cancelAnimationFrame(frame); frame = 0; draw(); }
+  function tick(now) {
+    time = Math.min(recording.opened, time + (now - earlier) / 1000);
+    earlier = now;
+    frame = time < recording.opened ? requestAnimationFrame(tick) : 0;
+    draw();
+  }
+  function run() {
+    earlier = performance.now(); frame = requestAnimationFrame(tick); draw();
+  }
+  function open(button) {
+    if (dialog.open) return;
+    trigger = button; time = start;
+    dialog.showModal(); dialog.scrollTop = 0;
+    if (stills()) draw(); else run();
+  }
+  play.addEventListener("click", () => {
+    if (frame) return pause();
+    if (stills()) {
+      time = time < recording.entered ? recording.entered : time < recording.opened ? recording.opened : start;
+      draw();
+    } else {
+      if (time >= recording.opened) time = start;
+      run();
+    }
+  });
+  find("[data-close-replay]").addEventListener("click", () => dialog.close());
+  dialog.addEventListener("close", () => {
+    pause();
+    const focus = trigger?.isConnected ? trigger : document.querySelector("[data-track-replay]") || document.querySelector("#inc-preview [data-close]");
+    if (focus) focus.focus({preventScroll: true});
+  });
+  reduced.addEventListener("change", () => { if (dialog.open) pause(); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden && dialog.open) pause(); });
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-track-replay]");
+    if (button) open(button);
+  });
+  document.querySelectorAll("[data-track-replay]").forEach((button) => { button.hidden = false; });
+
+  // The embedded application redraws its selection after each status refresh.
+  // Enhance only the recorded loop incident, leaving historical selections intact.
+  function enhanceDashboard(pane, matchesRecording) {
+    function update() {
+      const link = pane.querySelector('a.button[href^="/incidents/"]');
+      if (!link) return;
+      const id = link.getAttribute("href").slice("/incidents/".length).split("?")[0];
+      if (!matchesRecording(id)) return;
+      const button = document.createElement("button");
+      button.type = "button"; button.className = link.className; button.dataset.trackReplay = "";
+      button.textContent = "Replay Track 73"; link.replaceWith(button);
+    }
+    new MutationObserver(update).observe(pane, {childList: true});
+    update();
+  }
+  window.SentinelTrackReplay = { recording, enhanceDashboard };
 })();
 </script>
 <script>window.SentinelDemo && window.SentinelDemo.started();</script>

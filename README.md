@@ -39,3 +39,5 @@ Opening `index.html` straight from disk also works in most browsers; if the dash
 `dashboard.html` is generated. The generator lives outside this folder (`dashboard/build.py` in the working tree
 this candidate was made in); it needs a clone of the repository at beta.1 and Python 3.10 or newer, and runs in
 about 15 seconds. If the dashboard's code changes, regenerate rather than editing `dashboard.html` by hand.
+
+After regeneration, run `python3 tools/sync-dashboard-replay.py` to embed the site's Track 73 replay in the standalone demo. Both the embedded and standalone dashboard can then play the recording offline under the original content security policy. Use `--check` to verify the embedded copy matches the site assets.
