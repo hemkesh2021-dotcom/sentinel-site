@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sentinel v2 — One observation becomes local evidence</title>
+<meta name="description" content="An experimental, open-source edge monitoring project. One camera, local detection and tracking, and an incident record you can inspect. Built for NVIDIA Jetson.">
+<meta name="theme-color" content="#080d0d">
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top" id="top-bar">
+  <a class="mark" href="#top" aria-label="Sentinel v2, back to top"><span class="mark-dot" aria-hidden="true"></span>SENTINEL<sup>v2</sup></a>
+  <nav class="top-nav" aria-label="Sections">
+    <a href="#system">System</a>
+    <a href="#dashboard">Dashboard</a>
+    <a href="#evidence">Evidence</a>
+    <a href="#hardware">Hardware</a>
+    <a href="#project">Project</a>
+  </nav>
+  <a class="top-source" href="https://github.com/hemkesh2021-dotcom/Sentinel_Surveillance" target="_blank" rel="noopener">Source <span aria-hidden="true">↗</span></a>
+</header>
+
+<main id="main">
+
+  <!-- ============================================================ opening -->
+  <section class="hero" id="top">
+    <div class="hero-copy">
+      <p class="eyebrow"><span class="pulse" aria-hidden="true"></span>Experimental beta · local-first edge monitoring</p>
+      <h1>One observation becomes <em>local evidence.</em></h1>
+      <p class="lede">Sentinel watches one camera from an NVIDIA Jetson. It detects and tracks people, applies zone rules, and keeps an incident record on the device beside the camera, where you can inspect it.</p>
+      <div class="actions">
+        <a class="btn btn-solid" href="#dashboard">Try the dashboard <span aria-hidden="true">↓</span></a>
+        <a class="btn" href="https://github.com/hemkesh2021-dotcom/Sentinel_Surveillance/releases/tag/v2.0.0-beta.1" target="_blank" rel="noopener">v2.0.0-beta.1 <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+    <figure class="plate hero-plate" id="hero-plate">
+      <div class="plate-head mono"><span>Field study / 001</span><span>Courtyard · cam 01</span></div>
+      <div class="plate-frame">
+        <canvas id="hero-canvas" width="960" height="540" role="img" aria-label="A courtyard drawn in dots and lines, seen from above. People walk in through a gate and are marked as tracked people; a marked zone lights up when one steps into it."></canvas>
+        <i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i>
+      </div>
+      <figcaption>
+        <p class="event-line mono" id="hero-event" aria-live="off"><b>00.0 s</b><span>Waiting for the next arrival</span></p>
+        <div class="loop-bar" aria-hidden="true"><i id="hero-bar"></i></div>
+        <p class="honest mono">Synthetic sample · a scripted loop drawn in your browser · no camera connected</p>
+      </figcaption>
+    </figure>
+    <a class="scroll-cue mono" href="#system">Follow the frame <span aria-hidden="true">↓</span></a>
+  </section>
+
+  <!-- ============================================================ 01 the system -->
+  <section class="system" id="system">
+    <div class="sec-head">
+      <p class="kicker mono">01 — What it is</p>
+      <h2>A frame, a rule, a record.</h2>
+      <p class="sub">A camera captures what happened. Sentinel connects the observation, the rule and the evidence on the hardware beside it.</p>
+    </div>
+    <ol class="chain" id="chain">
+      <li data-step="source">
+        <span class="chain-n mono">01</span>
+        <h3>Start with the source.</h3>
+        <p>One RTSP stream enters the local pipeline. Every observation carries its frame's source time, the boot and the stream epoch, so a stale or mismatched result never drives a current decision.</p>
+        <span class="chain-tag mono">RTSP → stamped frames</span>
+      </li>
+      <li data-step="track">
+        <span class="chain-n mono">02</span>
+        <h3>Follow what moves.</h3>
+        <p>People are detected and followed as tracks across frames, on the Jetson. Empty, fresh, stale and offline states are published explicitly rather than guessed.</p>
+        <span class="chain-tag mono">Detect + track · on device</span>
+      </li>
+      <li data-step="rule">
+        <span class="chain-n mono">03</span>
+        <h3>Apply the rule.</h3>
+        <p>Zone rules decide what counts as an event. When one does, an incident opens in a local SQLite database, and alerts leave through a restart-safe outbox.</p>
+        <span class="chain-tag mono">Zone rules → SQLite incident</span>
+      </li>
+      <li data-step="review">
+        <span class="chain-n mono">04</span>
+        <h3>Review it where it lives.</h3>
+        <p>A dashboard on the device's loopback address shows the live picture, the incidents and their context. You reach it through an SSH tunnel.</p>
+        <span class="chain-tag mono">127.0.0.1 · SSH tunnel</span>
+      </li>
+    </ol>
+    <aside class="lanes">
+      <p class="mono lanes-h">Optional lanes · experimental</p>
+      <p>Face recognition and questions answered by a local vision-language model exist as optional lanes. Neither has passed admission for normal use; they run in guarded validation runs only.</p>
+      <p>External alerts through Telegram are off by default. Turning them on is a separate, deliberate choice.</p>
+    </aside>
+  </section>
+
+  <!-- ============================================================ 02 the dashboard -->
+  <section class="practice" id="dashboard">
+    <div class="sec-head">
+      <p class="kicker mono">02 — In practice</p>
+      <h2>Not a screenshot. <em>The dashboard, running.</em></h2>
+      <p class="sub">This is the beta dashboard's own interface, driven by the scripted courtyard above instead of a device. Click through it, ask it something, or steer the scene.</p>
+    </div>
+
+    <div class="deck" id="deck" data-state="loading">
+      <div class="deck-bar">
+        <div class="deck-group" role="group" aria-label="Jump to a moment in the scene">
+          <span class="deck-label mono">Scene</span>
+          <div class="chips" id="deck-scenarios"></div>
+        </div>
+        <div class="deck-group deck-right">
+          <button class="icon-btn" id="deck-play" type="button" aria-pressed="true" aria-label="Pause the scene"><span class="ico-pause" aria-hidden="true"></span><span class="icon-btn-t">Pause</span></button>
+          <div class="seg" role="group" aria-label="Dashboard appearance" id="deck-theme">
+            <button type="button" data-theme="dark" aria-pressed="true">Dark</button>
+            <button type="button" data-theme="light" aria-pressed="false">Light</button>
+          </div>
+          <a class="icon-btn" id="deck-open" href="dashboard.html" target="_blank" rel="noopener" aria-label="Open the dashboard in its own tab">Open <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+
+      <div class="deck-window">
+        <div class="deck-chrome mono" aria-hidden="true"><i></i><i></i><i></i><span>127.0.0.1:18090 — through an SSH tunnel on a real device</span></div>
+        <div class="deck-view">
+          <iframe id="deck-frame" title="Sentinel beta dashboard, running on synthetic demonstration data" loading="lazy" allow="fullscreen"></iframe>
+          <button class="deck-tap" id="deck-tap" type="button" hidden><span>Tap to use the dashboard</span></button>
+          <div class="deck-wait mono" id="deck-wait">Starting the dashboard…</div>
+          <div class="deck-fallback" id="deck-fallback" hidden>
+            <img id="deck-poster" alt="The Sentinel beta dashboard with synthetic demonstration data: a live picture of the courtyard, tracked people, incidents and system health." width="1440" height="900" loading="lazy">
+            <p>The live dashboard could not be embedded here. <a href="dashboard.html" target="_blank" rel="noopener">Open it in its own tab <span aria-hidden="true">↗</span></a></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="tape" id="tape">
+        <div class="tape-track">
+          <div class="tape-spans" id="tape-spans" aria-hidden="true"></div>
+          <input class="tape-range" id="tape-range" type="range" min="0" max="72" step="0.1" value="0" aria-label="Scene time, in seconds of a 72 second loop">
+        </div>
+        <p class="tape-now mono" id="tape-now" aria-live="off"><b>00.0 s</b><span>Scene clock</span></p>
+      </div>
+    </div>
+
+    <ul class="try">
+      <li><b class="mono">Try</b>Open an incident to see what was kept and why.</li>
+      <li><b class="mono">Try</b>Ask a question in the Ask panel. Here the answers come from the scripted scene, not from a model.</li>
+      <li><b class="mono">Try</b>Choose “Stream stalls” and watch freshness change from fresh to stale.</li>
+      <li><b class="mono">Try</b>Open Features, press “Use the demo key”, and switch a feature off or on.</li>
+    </ul>
+    <p class="honest mono">Synthetic demonstration. No camera, model or device is connected: the picture is an illustration, the people are scripted and the answers are examples. Nothing here measures recognition or model performance.</p>
+  </section>
+
+  <!-- ============================================================ evidence -->
+  <section class="evidence" id="evidence">
+    <div class="sec-head">
+      <p class="kicker mono">Evidence review</p>
+      <h2>What an incident <em>keeps.</em></h2>
+      <p class="sub">The moment and the record of it, side by side: the frame as the camera saw it, and the few facts Sentinel writes down about it.</p>
+    </div>
+    <figure class="plate evidence-plate">
+      <div class="plate-head mono"><span>Incident / synthetic sample</span><span id="ev-no">No. 073</span></div>
+      <div class="plate-frame">
+        <canvas id="ev-canvas" width="960" height="540" role="img" aria-label="The courtyard as the camera sees it, drawn in dots, at the moment a tracked person stands inside Zone A in front of a side door."></canvas>
+        <i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i>
+      </div>
+      <div class="plate-record">
+        <svg id="ev-diagram" viewBox="0 0 960 540" role="img" aria-label="The same moment as a diagram: the zone outline, the path the tracked person walked and the point where the path crosses into the zone."></svg>
+        <dl class="fields">
+          <div><dt class="mono">Event</dt><dd>Person in restricted zone <small>Zone A · a confirmed track stayed past the rule's threshold</small></dd></div>
+          <div><dt class="mono">Track</dt><dd>73 <small>one person, followed across frames</small></dd></div>
+          <div><dt class="mono">Source time</dt><dd id="ev-time">14.0 s <small>of the scripted loop; on a device, the frame's own time</small></dd></div>
+          <div><dt class="mono">Stored</dt><dd>Local SQLite <small>on the device</small></dd></div>
+          <div><dt class="mono">Snapshot</dt><dd>Opt-in <small>kept only when you enable it</small></dd></div>
+          <div><dt class="mono">Alert</dt><dd>Local outbox <small>Telegram is off by default</small></dd></div>
+        </dl>
+      </div>
+    </figure>
+    <ul class="notes">
+      <li><h3>Freshness is visible.</h3><p>Fresh, stale, offline and empty states keep the age of an observation in view.</p></li>
+      <li><h3>Context is connected.</h3><p>An incident carries the time and stream stamps of the observation behind it, so a record can be checked against what was seen.</p></li>
+      <li><h3>Review stays local.</h3><p>The dashboard binds to localhost. Nothing about review requires an outside service.</p></li>
+    </ul>
+  </section>
+
+  <!-- ============================================================ 03 the hardware -->
+  <section class="film" id="hardware" aria-labelledby="film-title">
+    <div class="film-track" id="film-track">
+      <div class="film-stage" id="film-stage" data-beat="0" data-ready="0">
+        <p class="kicker mono film-kicker" id="film-title">03 — The hardware</p>
+        <div class="film-view" id="film-view">
+        <img class="film-poster" id="film-poster" alt="" aria-hidden="true">
+        <canvas id="film-canvas" aria-hidden="true"></canvas>
+        <div class="film-overlay" id="film-overlay" aria-hidden="true">
+          <div class="fl-frame" data-k="frame"><i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i><span class="fl-frame-a mono">Courtyard · cam 01</span><span class="fl-frame-b mono">Synthetic sample</span></div>
+          <div class="fl-pin mono" data-k="capture"><b>01</b>Capture</div>
+          <div class="fl-pin mono" data-k="process"><b>02</b>Process</div>
+          <div class="fl-pin fl-event mono" data-k="event"><span>Zone A · entered</span></div>
+          <div class="fl-tag mono" data-k="depth">Illustrative scene · not a live feed or depth sensor</div>
+          <div class="fl-track" data-k="track"><i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i><span class="mono"><b></b>0073</span></div>
+          <div class="fl-cam mono" data-k="cam">Cam 01</div>
+          <div class="fl-pin fl-signal mono" data-k="stream">Local network</div>
+          <div class="fl-record" data-k="record">
+            <p class="mono fl-record-h">Local record <span>synthetic sample</span></p>
+            <p class="fl-record-t">Person in restricted zone</p>
+            <dl>
+              <div><dt class="mono">Where</dt><dd>Zone A · track 73</dd></div>
+              <div><dt class="mono">Stored</dt><dd>Local SQLite, on the device</dd></div>
+              <div><dt class="mono">Snapshot</dt><dd>Only if you enable it</dd></div>
+              <div><dt class="mono">Alert</dt><dd>Local outbox · Telegram off by default</dd></div>
+            </dl>
+          </div>
+        </div>
+        </div>
+
+        <div class="film-chrome">
+          <div class="film-caps" id="film-caps" aria-live="polite">
+            <div class="cap" data-beat="0"><p class="mono cap-n">1 / 7</p><h3>Two parts. <em>One local loop.</em></h3><p>A camera to observe and an edge computer to process. In the featured build they are an Imou Ranger S2 and a Jetson Orin Nano Super.</p></div>
+            <div class="cap" data-beat="1"><p class="mono cap-n">2 / 7</p><h3>It starts <em>at the glass.</em></h3><p>One RTSP stream enters the pipeline. The dashboard's preview reuses those captured frames; it does not open a second connection to the camera.</p></div>
+            <div class="cap" data-beat="2"><p class="mono cap-n">3 / 7</p><h3>One <em>observation.</em></h3><p>A frame arrives with its source time attached, so current activity stays distinct from stale frames.</p></div>
+            <div class="cap" data-beat="3"><p class="mono cap-n">4 / 7</p><h3>The same frame, <em>opened.</em></h3><p>Lifted out of the camera's view so the scene can be read: the yard, the person, the zone, and the cone the camera sees. An illustration: Sentinel works on the flat frame.</p></div>
+            <div class="cap" data-beat="4"><p class="mono cap-n">5 / 7</p><h3>The event stays <em>identifiable.</em></h3><p>The person is followed as one track. When that track stays in Zone A past the rule's threshold, the zone rule opens an incident for it.</p></div>
+            <div class="cap" data-beat="5"><p class="mono cap-n">6 / 7</p><h3>Carried to the board <em>beside it.</em></h3><p>Detection, tracking and incident storage run on the Jetson, on your own network. External alerts are a separate choice, off by default.</p></div>
+            <div class="cap" data-beat="6"><p class="mono cap-n">7 / 7</p><h3>Local <em>evidence.</em></h3><p>An incident record in local SQLite, stamped with the time of the observation behind it. Snapshots are kept only if you turn them on.</p>
+              <dl class="cap-record">
+                <div><dt class="mono">Event</dt><dd>Person in restricted zone · Zone A · track 73</dd></div>
+                <div><dt class="mono">Stored</dt><dd>Local SQLite, on the device</dd></div>
+                <div><dt class="mono">Alert</dt><dd>Local outbox · Telegram off by default</dd></div>
+              </dl>
+            </div>
+          </div>
+          <div class="film-ctl">
+            <button class="icon-btn" id="film-play" type="button" aria-pressed="false" aria-label="Play the sequence"><span class="ico-play" aria-hidden="true"></span><span class="icon-btn-t">Play the sequence</span></button>
+            <div class="film-steps" id="film-steps" role="group" aria-label="Chapters of the hardware sequence"></div>
+          </div>
+          <p class="honest mono film-note" id="film-note"><span class="note-wide">Illustrative hardware study · synthetic courtyard · no camera connected</span><span class="note-narrow">Illustrative study · synthetic scene · no camera</span></p>
+        </div>
+      </div>
+    </div>
+
+    <ol class="film-static" id="film-static" hidden></ol>
+
+    <div class="pair">
+      <div>
+        <p class="kicker mono">The eyes</p>
+        <h3>Imou Ranger S2</h3>
+        <p>The camera in the featured build. Its RTSP stream is the starting point for the local pipeline.</p>
+      </div>
+      <div>
+        <p class="kicker mono">The compute</p>
+        <h3>Jetson Orin Nano Super</h3>
+        <p>The edge computer beside the camera. Detection, tracking and incident storage run on the Jetson.</p>
+      </div>
+      <p class="honest mono">The models in this sequence are original, generic studies of a pan-tilt camera and a compute board, not renders of those products. Featured setup, not a compatibility certification.</p>
+    </div>
+  </section>
+
+  <!-- ============================================================ 04 the project -->
+  <section class="project" id="project">
+    <div class="sec-head">
+      <p class="kicker mono">04 — Built in the open · v2.0.0-beta.1</p>
+      <h2>A beta, with clear boundaries.</h2>
+      <p class="sub">Sentinel is a project you can inspect, test and help improve. Start with the source and the limits of the current beta.</p>
+    </div>
+
+    <div class="status">
+      <div class="status-row">
+        <p class="mono status-k"><i class="dot dot-on" aria-hidden="true"></i>Implemented</p>
+        <p>The core one-camera path: detection, tracking, zone rules, local SQLite incidents, an alert outbox and a dashboard. Portable tests and a bounded device check exist. The system has no production acceptance.</p>
+      </div>
+      <div class="status-row">
+        <p class="mono status-k"><i class="dot dot-mid" aria-hidden="true"></i>Experimental</p>
+        <p>Face recognition and visual chat have not passed admission for normal use. The dashboard may show these panels. No accuracy, speed or reliability guarantee is claimed.</p>
+      </div>
+      <div class="status-row">
+        <p class="mono status-k"><i class="dot dot-off" aria-hidden="true"></i>Unverified</p>
+        <p>The reference is a Jetson Orin Nano 8 GB. A complete launch from the current tester package, and any other Jetson configuration, remain unverified. Read the tester guide and release notes before trying the beta.</p>
+      </div>
+      <div class="status-row">
+        <p class="mono status-k"><i class="dot dot-on" aria-hidden="true"></i>What leaves the device</p>
+        <p>Core inference and incident storage are local. External alert channels are disabled by default; enabling Telegram sends selected alert information to that external service. This website does not connect to your camera.</p>
+      </div>
+    </div>
+
+    <ul class="links">
+      <li><a href="https://github.com/hemkesh2021-dotcom/Sentinel_Surveillance" target="_blank" rel="noopener"><span class="mono">01</span><b>Explore the source</b><small>Architecture, implementation and tests.</small><i aria-hidden="true">↗</i></a></li>
+      <li><a href="https://github.com/hemkesh2021-dotcom/Sentinel_Surveillance/blob/master/packaging/beta-install/QUICKSTART.md" target="_blank" rel="noopener"><span class="mono">02</span><b>Read the tester guide</b><small>Reference hardware, setup and validation gates.</small><i aria-hidden="true">↗</i></a></li>
+      <li><a href="https://github.com/hemkesh2021-dotcom/Sentinel_Surveillance/releases/tag/v2.0.0-beta.1" target="_blank" rel="noopener"><span class="mono">03</span><b>Follow the beta</b><small>What changed and what is still being tested.</small><i aria-hidden="true">↗</i></a></li>
+      <li><a href="https://github.com/hemkesh2021-dotcom/Sentinel_Surveillance/wiki/Status-and-limitations" target="_blank" rel="noopener"><span class="mono">04</span><b>Status and limitations</b><small>The known limits, kept current in the wiki.</small><i aria-hidden="true">↗</i></a></li>
+    </ul>
+  </section>
+</main>
+
+<footer class="foot">
+  <p class="foot-big">Stay close to what matters.</p>
+  <div class="foot-row">
+    <p><a class="mark" href="#top"><span class="mark-dot" aria-hidden="true"></span>SENTINEL<sup>v2</sup></a><br>A project by Hemkesh.<br>Experimental, local-first, open source.</p>
+    <p><a href="https://github.com/hemkesh2021-dotcom/Sentinel_Surveillance/blob/master/LICENSE" target="_blank" rel="noopener">MIT project code ↗</a><br>Third-party models and dependencies have their own licenses.<br>Illustrative scenes and synthetic demo data are labeled throughout.</p>
+    <p><a href="#top">Back to top ↑</a></p>
+  </div>
+</footer>
+
+<script>window.SENTINEL_SITE = Object.assign({"three":"assets/three.min.js","dashboard":"dashboard.html","posters":"posters/"}, { trackLabel: function (a) { return "Track " + a.track; } });</script>
+<script src="assets/courtyard.js"></script>
+<script src="assets/hardware.js"></script>
+<script src="assets/film.js"></script>
+<script src="assets/site.js"></script>
+</body>
+</html>
