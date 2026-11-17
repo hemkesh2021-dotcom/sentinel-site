@@ -25,7 +25,8 @@
   };
   const said = (e) => (SAY[e.kind] ? SAY[e.kind](e.actor) : e.kind);
   // the script's events, plus the moment the demonstration's zone rule (a one second threshold) opens its incident
-  const EVENTS = yard.EVENTS.concat(yard.EVENTS.filter((e) => e.kind === "zone_enter").map((e) => ({ t: e.t + 1, kind: "incident", actor: e.actor }))).sort((a, b) => a.t - b.t);
+  const recording = window.SentinelTrackReplay.recording;
+  const EVENTS = yard.EVENTS.concat({ t: recording.opened, kind: "incident", actor: "a" }).sort((a, b) => a.t - b.t);
   const lastEvent = (t) => { let hit = null; for (const e of EVENTS) if (e.t <= t + 1e-6) hit = e; return hit; };
   function sharp(canvas) {  // a 960 by 540 picture, drawn at the screen's density
     const k = Math.min(2, window.devicePixelRatio || 1);
@@ -51,8 +52,8 @@
   {
     const canvas = $("#hero-canvas"), ctx = sharp(canvas), line = $("#hero-event"), bar = $("#hero-bar");
     const FIELD = yard.fieldView({ box: [0.0, 0.03, 1.0, 1.0] });
-    const T0 = 4, T1 = 60;
-    let t = calm ? 14.8 : T0, on = false, last = 0, zone = 0, shownKey = "";
+    const T0 = yard.EVENTS.find((e) => e.kind === "confirmed").t, T1 = 60;
+    let t = calm ? recording.opened : T0, on = false, last = 0, zone = 0, shownKey = "";
     function paint() {
       const state = yard.sample(t);
       zone += ((state.actors.some((a) => a.inZone) ? 1 : 0) - zone) * 0.12;
@@ -177,7 +178,7 @@
 
   // ---------------------------------------------------------------- evidence: the moment, and the record of it
   {
-    const T = 14.8, state = yard.sample(T), a = state.actors[0];
+    const T = recording.opened, state = yard.sample(T), a = state.actors.find((actor) => actor.track === recording.track);
     yard.render(sharp($("#ev-canvas")), state, { view: yard.CAMERA, annotations: true, zoneStrength: 1 });
     const G = yard.GEOM, Y = G.YARD, P = (x, y, z) => yard.project(x, y, z).map((v) => +v.toFixed(1)).join(",");
     const path = [];
@@ -189,7 +190,7 @@
       if (who.inZone && !crossed) crossed = at;
       if (i % 4 === 0) path.push(at);
     }
-    const entered = yard.EVENTS.find((e) => e.kind === "zone_enter");
+    path.push({ t: T, x: a.foot[0] * yard.W, y: a.foot[1] * yard.H });
     const svg = $("#ev-diagram"), wide = () => svg.getBoundingClientRect().width || 760;
     const fitText = () => { const k = Math.min(3, Math.max(1, 1050 / wide())); svg.style.setProperty("--k", k.toFixed(2)); svg.dataset.dense = k > 1.5 ? "1" : "0"; };
     fitText(); window.addEventListener("resize", fitText);
@@ -217,7 +218,7 @@
       <text x="24" y="40" class="dg-t dg-x">PATH OF ONE TRACK · ${sec(path[0].t)} TO ${sec(T)}</text>
       <text x="936" y="516" text-anchor="end" class="dg-t dg-x">DRAWN FROM THE SAME SCRIPT AS THE FRAME ABOVE</text>
       <style>.dg-t,.dg-s{font:500 calc(11px * var(--k, 1)) "IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;fill:#9aa7a0;letter-spacing:.08em}.dg-s{fill:#b4eed0}[data-dense="1"] .dg-x{display:none}</style>`;
-    if (entered) $("#ev-time").firstChild.textContent = sec(entered.t) + " ";
+    $("#ev-time").firstChild.textContent = T.toFixed(2) + " s ";
   }
 
   // ---------------------------------------------------------------- 03: the hardware film
@@ -245,7 +246,7 @@
     function setBeat(i) {
       if (i === beat) return;
       beat = i; stage.dataset.beat = String(i);
-      caps.forEach((c, j) => c.classList.toggle("on", j === i));
+      caps.forEach((c, j) => { c.classList.toggle("on", j === i); c.setAttribute("aria-hidden", String(j !== i)); });
       steps.forEach((s, j) => s.setAttribute("aria-current", String(j === i)));
     }
     const beatAt = (p) => { let i = 0; for (let j = 0; j < BEATS.length; j += 1) if (p >= BEATS[j].at - 0.012) i = j; return i; };
@@ -268,8 +269,7 @@
       const step = (now) => {
         const k = clamp01((now - t0) / span);
         jump(top() + (from + (1 - from) * k) * total());
-        auto = k < 1 ? requestAnimationFrame(step) : 0;
-        if (!auto) stopAuto();
+        if (k < 1) auto = requestAnimationFrame(step); else stopAuto();
       };
       auto = requestAnimationFrame(step);
     });
@@ -285,7 +285,7 @@
       caps.forEach((c, i) => {
         const li = document.createElement("li"), img = document.createElement("img"), copy = c.cloneNode(true);
         img.src = cfg.posters + "film-" + (i + 1) + ".jpg"; img.alt = ""; img.loading = "lazy"; img.width = 1280; img.height = 720;
-        copy.classList.add("on"); li.append(img, copy); list.appendChild(li);
+        copy.classList.add("on"); copy.removeAttribute("aria-hidden"); li.append(img, copy); list.appendChild(li);
       });
     }
     function load(src) { return new Promise((ok, no) => { if (window.THREE) return ok(); const s = document.createElement("script"); s.src = src; s.onload = () => ok(); s.onerror = () => no(new Error("three.js did not load")); document.head.appendChild(s); }); }

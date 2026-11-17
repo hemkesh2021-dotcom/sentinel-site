@@ -8,6 +8,7 @@
 <meta name="theme-color" content="#080d0d">
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/site.css">
+<link rel="stylesheet" href="assets/track-replay.css">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -29,12 +30,12 @@
   <!-- ============================================================ opening -->
   <section class="hero" id="top">
     <div class="hero-copy">
-      <p class="eyebrow"><span class="pulse" aria-hidden="true"></span>Experimental beta · local-first edge monitoring</p>
+      <p class="eyebrow"><span class="pulse" aria-hidden="true"></span>Experimental beta<span class="hero-context"> · local-first edge monitoring</span></p>
       <h1>One observation becomes <em>local evidence.</em></h1>
-      <p class="lede">Sentinel watches one camera from an NVIDIA Jetson. It detects and tracks people, applies zone rules, and keeps an incident record on the device beside the camera, where you can inspect it.</p>
+      <p class="lede">Sentinel follows people through one camera. An NVIDIA Jetson checks zone rules and stores incidents locally.</p>
       <div class="actions">
         <a class="btn btn-solid" href="#dashboard">Try the dashboard <span aria-hidden="true">↓</span></a>
-        <a class="btn" href="https://github.com/hemkesh2021-dotcom/Sentinel_Surveillance/releases/tag/v2.0.0-beta.1" target="_blank" rel="noopener">v2.0.0-beta.1 <span aria-hidden="true">↗</span></a>
+        <a class="btn hero-release" href="https://github.com/hemkesh2021-dotcom/Sentinel_Surveillance/releases/tag/v2.0.0-beta.1" target="_blank" rel="noopener">v2.0.0-beta.1 <span aria-hidden="true">↗</span></a>
       </div>
     </div>
     <figure class="plate hero-plate" id="hero-plate">
@@ -44,7 +45,7 @@
         <i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i>
       </div>
       <figcaption>
-        <p class="event-line mono" id="hero-event" aria-live="off"><b>00.0 s</b><span>Waiting for the next arrival</span></p>
+        <p class="event-line mono" id="hero-event" aria-live="off"><b>07.0 s</b><span>Followed as track 73</span></p>
         <div class="loop-bar" aria-hidden="true"><i id="hero-bar"></i></div>
         <p class="honest mono">Synthetic sample · a scripted loop drawn in your browser · no camera connected</p>
       </figcaption>
@@ -155,19 +156,20 @@
       <p class="sub">The moment and the record of it, side by side: the frame as the camera saw it, and the few facts Sentinel writes down about it.</p>
     </div>
     <figure class="plate evidence-plate">
-      <div class="plate-head mono"><span>Incident / synthetic sample</span><span id="ev-no">No. 073</span></div>
+      <div class="plate-head mono"><span>Incident / synthetic sample</span><span>Track 73</span></div>
       <div class="plate-frame">
         <canvas id="ev-canvas" width="960" height="540" role="img" aria-label="The courtyard as the camera sees it, drawn in dots, at the moment a tracked person stands inside Zone A in front of a side door."></canvas>
         <i class="tick tl"></i><i class="tick tr"></i><i class="tick bl"></i><i class="tick br"></i>
       </div>
+      <button type="button" class="btn evidence-replay" data-track-replay hidden>Replay Track 73 <span aria-hidden="true">↗</span></button>
       <div class="plate-record">
         <svg id="ev-diagram" viewBox="0 0 960 540" role="img" aria-label="The same moment as a diagram: the zone outline, the path the tracked person walked and the point where the path crosses into the zone."></svg>
         <dl class="fields">
           <div><dt class="mono">Event</dt><dd>Person in restricted zone <small>Zone A · a confirmed track stayed past the rule's threshold</small></dd></div>
           <div><dt class="mono">Track</dt><dd>73 <small>one person, followed across frames</small></dd></div>
-          <div><dt class="mono">Source time</dt><dd id="ev-time">14.0 s <small>of the scripted loop; on a device, the frame's own time</small></dd></div>
+          <div><dt class="mono">Source time</dt><dd id="ev-time">15.13 s <small>the frame that opened this incident</small></dd></div>
           <div><dt class="mono">Stored</dt><dd>Local SQLite <small>on the device</small></dd></div>
-          <div><dt class="mono">Snapshot</dt><dd>Opt-in <small>kept only when you enable it</small></dd></div>
+          <div><dt class="mono">Snapshot</dt><dd>No snapshot saved <small>the courtyard above is an illustration</small></dd></div>
           <div><dt class="mono">Alert</dt><dd>Local outbox <small>Telegram is off by default</small></dd></div>
         </dl>
       </div>
@@ -217,7 +219,7 @@
             <div class="cap" data-beat="3"><p class="mono cap-n">4 / 7</p><h3>The same frame, <em>opened.</em></h3><p>Lifted out of the camera's view so the scene can be read: the yard, the person, the zone, and the cone the camera sees. An illustration: Sentinel works on the flat frame.</p></div>
             <div class="cap" data-beat="4"><p class="mono cap-n">5 / 7</p><h3>The event stays <em>identifiable.</em></h3><p>The person is followed as one track. When that track stays in Zone A past the rule's threshold, the zone rule opens an incident for it.</p></div>
             <div class="cap" data-beat="5"><p class="mono cap-n">6 / 7</p><h3>Carried to the board <em>beside it.</em></h3><p>Detection, tracking and incident storage run on the Jetson, on your own network. External alerts are a separate choice, off by default.</p></div>
-            <div class="cap" data-beat="6"><p class="mono cap-n">7 / 7</p><h3>Local <em>evidence.</em></h3><p>An incident record in local SQLite, stamped with the time of the observation behind it. Snapshots are kept only if you turn them on.</p>
+            <div class="cap" data-beat="6"><p class="mono cap-n">7 / 7</p><h3>Local <em>evidence.</em></h3><p>The Jetson saves the event with its source time. Snapshots are opt-in.</p>
               <dl class="cap-record">
                 <div><dt class="mono">Event</dt><dd>Person in restricted zone · Zone A · track 73</dd></div>
                 <div><dt class="mono">Stored</dt><dd>Local SQLite, on the device</dd></div>
@@ -298,6 +300,7 @@
 
 <script>window.SENTINEL_SITE = Object.assign({"three":"assets/three.min.js","dashboard":"dashboard.html","posters":"posters/"}, { trackLabel: function (a) { return "Track " + a.track; } });</script>
 <script src="assets/courtyard.js"></script>
+<script src="assets/track-replay.js"></script>
 <script src="assets/hardware.js"></script>
 <script src="assets/film.js"></script>
 <script src="assets/site.js"></script>
